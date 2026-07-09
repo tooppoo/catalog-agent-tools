@@ -270,6 +270,7 @@ For Markdown documentation files, run the repository-provided semantic line brea
 Example:
 
 ```sh
+git diff --name-only -- '*.md' '*.markdown' | scripts/docs/check-markdown-semantic-line-breaks.sh
 git ls-files -- '*.md' '*.markdown' | scripts/docs/check-markdown-semantic-line-breaks.sh
 ```
 
