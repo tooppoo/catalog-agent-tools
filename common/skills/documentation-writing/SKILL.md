@@ -257,6 +257,51 @@ Valid exceptions include:
 
 Apply exceptions narrowly. Do not generalize an exception to nearby prose.
 
+## Repository validation scripts
+
+When the repository provides documentation validation scripts, use them before returning documentation changes as complete.
+
+These scripts are validators, not file discovery tools.
+
+Do not make the scripts responsible for deciding which files to scan. Determine the target files from the task context, changed files, or the repository's check recipe, then pass those file paths to the scripts by arguments or standard input.
+
+For Markdown documentation files, run the repository-provided semantic line break validator when available.
+
+Example:
+
+```sh
+git ls-files -- '*.md' '*.markdown' | scripts/docs/check-markdown-semantic-line-breaks.sh
+```
+
+For Markdown documentation files, run the repository-provided bare file path validator when available.
+
+Example:
+
+```sh
+git diff --name-only -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -n
+git ls-files -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -n
+```
+
+If the repository uses NUL-delimited file lists, use the validator's NUL-input mode.
+
+Example:
+
+```sh
+git diff --name-only -z -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -0 -n
+git ls-files -z -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -0 -n
+```
+
+Use `git diff --name-only` when validating only changed Markdown files.
+Use `git ls-files` when validating all Git-tracked Markdown files.
+
+If a validator reports a problem, do not treat the documentation change as ready.
+
+Fix the issue when file modification is in scope. If file modification is not in scope, report the validator finding clearly.
+
+If an expected validator is unavailable, cannot be executed, or is not applicable to the changed files, state that explicitly and continue with the manual documentation review defined by this skill.
+
+Passing the validators is necessary but not sufficient. Continue to apply the manual review rules in this skill.
+
 ## Review before final output
 
 Before returning code or documentation, check:
@@ -269,5 +314,7 @@ Before returning code or documentation, check:
 * Did I leave ordinary code formatting to the formatter?
 * Did I write Markdown prose file references as links when practical?
 * Did I avoid linkifying paths inside code blocks, commands, snapshots, config, and generated output?
+* Did I run the repository-provided documentation validators when applicable?
+* Did I fix or report any semantic line break or bare file path findings reported by those validators?
 
 If any answer indicates mechanical hard-wrapping or a missing navigational file link, revise the prose before returning the result.
