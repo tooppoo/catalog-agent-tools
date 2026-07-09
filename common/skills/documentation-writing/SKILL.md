@@ -292,8 +292,8 @@ git diff --name-only -z -- '*.md' '*.markdown' | scripts/docs/check-bare-markdow
 git ls-files -z -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -0 -n
 ```
 
-Use `git diff --name-only` when validating only changed Markdown files.
-Use `git ls-files` when validating all Git-tracked Markdown files.
+- Use `git diff --name-only` when validating only changed Markdown files.
+- Use `git ls-files` when validating all Git-tracked Markdown files.
 
 If a validator reports a problem, do not treat the documentation change as ready.
 
