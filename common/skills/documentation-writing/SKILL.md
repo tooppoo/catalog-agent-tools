@@ -1,321 +1,128 @@
 ---
 name: documentation-writing
-description: Write and edit documentation-oriented prose with semantic line breaks, navigable file references, and clear structure. Use when writing or editing Markdown docs, READMEs, ADRs, design notes, issue/PR text, changelogs, inline comments, and doc comments; do not use for ordinary source-code formatting.
+description: Plan, organize, write, generate, and review durable repository documentation by separating user, developer, and AI audiences; preferring generated references from executable specifications or implementation; avoiding duplicated knowledge across documents; and reserving hand-written prose for rationale, purpose, workflows, trade-offs, and other context that cannot be derived mechanically.
 ---
 
 # Documentation Writing
 
 ## Purpose
 
-Write documentation-oriented prose that is easy to review, navigate, and maintain.
+Create repository documentation that is navigable, resistant to drift, explicit about audience, and clear about its authoritative source.
 
-This skill prevents mechanical hard-wrapping of prose and requires file references in Markdown prose to be written as links when practical.
+This skill applies both to documentation architecture and to documentation prose.
+It extends ordinary writing rules with source-of-truth, generation, indexing, audience separation, and cross-document reference rules.
 
-Documentation should optimize for:
+## Core principles
 
-1. semantic structure
-2. reviewability
-3. navigability
-4. stable diffs
-5. formatter compatibility
-
-Do not optimize prose layout for visual column width.
-
-## Core rules
-
-### Semantic line breaks
-
-Do not insert a newline inside a natural-language sentence merely because the line is long.
-
-Line breaks in prose must express semantic structure, not visual column width.
-
-If a prose line feels too long, rewrite the prose. Do not mechanically wrap it.
-
-Use one of these revisions instead:
-
-1. shorten the sentence
-2. split it into multiple sentences
-3. convert parallel conditions into a list
-4. move excessive detail from a source-code comment into documentation
-
-### File references in Markdown prose
-
-When referring to a file path in Markdown prose, write it as a Markdown link whenever practical.
-
-Prefer:
-
-```md
-See [the runtime requirements document](docs/generated-installer-runtime.md).
-```
-
-Avoid bare file paths in prose:
-
-```md
-See docs/generated-installer-runtime.md.
-```
-
-Use a label that explains the role of the file, not only the path, when the surrounding sentence benefits from it.
-
-Good:
-
-```md
-The runtime requirements are documented in [the generated installer runtime guide](docs/generated-installer-runtime.md).
-```
-
-Also acceptable when the exact path is the useful label:
-
-```md
-Update [docs/generated-installer-runtime.md](docs/generated-installer-runtime.md) when runtime requirements change.
-```
-
-Do not link file paths when doing so would change the meaning or reduce fidelity.
-
-Do not apply this rule inside:
-
-* code blocks
-* terminal examples
-* generated snapshots
-* machine-readable config
-* quoted source material
-* inline code where the path is part of a command, value, or syntax example
-* files whose format does not support Markdown links
-
-Apply this rule to prose references, not to literal code or generated output.
+1. Separate user-facing guidance, developer-facing design documentation, and AI-facing navigation.
+2. Provide index files that explain what to read, who should read it, and when.
+3. Prefer generated reference material for facts that can be derived from executable specifications, schemas, registries, fixtures, tests, or implementation.
+4. Use hand-written documentation primarily for purpose, rationale, rejected alternatives, trade-offs, workflows, mental models, and responsibility boundaries.
+5. Do not duplicate substantive information across documents.
+6. When another document already contains the required information, link to that document instead of rewriting the same information.
+7. Keep AI-facing documentation thin and navigational.
+8. Do not treat generated files as hand-edited sources.
+9. Preserve semantic line breaks and navigable file references.
+10. Validate generated output, links, examples, indexes, and prose before declaring documentation work complete.
 
 ## Scope
 
-Apply this skill when generating or editing:
+Apply the full skill when creating, reorganizing, or reviewing durable repository documentation, including:
 
-* Markdown documentation
-* README files
-* ADRs
-* design notes
-* issue descriptions
-* PR descriptions
-* changelog entries written as prose
-* inline source-code comments
-* block comments
-* JSDoc / TSDoc
-* Rustdoc
-* Go doc comments
-* other natural-language comments embedded in source code
+- documentation trees
+- user guides
+- developer guides
+- AI-facing reading guides
+- generated references
+- architecture and design documents
+- ADRs
+- README files that act as documentation entrypoints
+- documentation generation and validation workflows
 
-Do not apply this skill to ordinary source-code formatting. Let the project formatter decide code layout.
+For issue descriptions, PR descriptions, changelogs, and similar prose, apply the relevant prose and link rules.
+Do not impose the full repository documentation architecture unless the task changes durable documentation.
 
-## Markdown prose
+For code-comment content decisions, use the repository's code-comment skill when available.
+This skill still governs documentation links and prose structure inside comments.
 
-Prefer one logical paragraph per physical line.
+## Default workflow
 
-Bad:
+1. Inspect the existing documentation tree, indexes, implementation, executable specifications, schemas, fixtures, tests, generators, and ADRs.
+2. Identify the target audience and the document role.
+3. Find whether the required information already has an authoritative home.
+4. If it already exists, reference it instead of duplicating it.
+5. Decide whether each factual section can be generated or mechanically verified.
+6. Generate implementation-derived reference material whenever practical.
+7. Write only the human-authored context that cannot be derived mechanically.
+8. Update the relevant user, developer, AI, and root indexes.
+9. Run generators, drift checks, examples, link validation, and repository-provided documentation checks.
+10. Review the result for duplicated knowledge, unclear authority, orphaned documents, and stale references.
 
-```md
-This command validates the workspace and reports diagnostics
-for all configured providers before writing output.
-```
+## Supporting references
 
-Good:
+Read only the references needed for the current task.
 
-```md
-This command validates the workspace and reports diagnostics for all configured providers before writing output.
-```
+- Read [documentation architecture](references/documentation-architecture.md) when creating, reorganizing, or splitting documentation by audience, or when adding or reviewing index files.
+- Read [source of truth and generation](references/source-of-truth-and-generation.md) when documenting syntax, CLI behavior, configuration, schemas, protocols, diagnostics, artifacts, APIs, or other facts that may be generated from executable specifications or implementation.
+- Read [human-authored documentation](references/human-authored-documentation.md) when writing purpose, rationale, goals, non-goals, workflows, mental models, trade-offs, rejected alternatives, responsibility boundaries, or ADR-like material.
+- Read [cross-document references](references/cross-document-references.md) whenever information is needed in more than one document, when moving or splitting documents, or when reviewing for duplication.
+- Read [prose and links](references/prose-and-links.md) when editing Markdown prose, file references, documentation comments, or line structure.
+- Read [the review checklist](references/review-checklist.md) before declaring a documentation change complete.
 
-Also acceptable when the project intentionally uses sentence-per-line prose:
+## Compact decision rules
 
-```md
-This command validates the workspace.
-It reports diagnostics for all configured providers before writing output.
-```
+### Audience
 
-Do not split a single sentence across lines merely to satisfy a visual line-width preference.
+- Users need task-oriented guidance, concepts, troubleshooting, and links to exact references.
+- Developers need architecture, invariants, responsibility boundaries, extension points, and change procedures.
+- AI agents need reading order, constraints, and pointers to authoritative documents.
+- ADRs preserve why a decision was made and why alternatives were rejected.
 
-## Source-code comments
+### Generation
 
-Do not split one comment sentence across multiple comment lines merely because of width.
+Ask:
 
-Bad:
+> Can this information be derived deterministically from an executable specification, schema, registry, fixture, test, or implementation?
 
-```ts
-// The runner captures stdout and stderr separately so that
-// callers can assert stream-specific behavior.
-```
+If yes, prefer generation or mechanical verification.
+Do not manually duplicate the generated facts in prose.
 
-Good:
+### Duplication
 
-```ts
-// The runner captures stdout and stderr separately so callers can assert stream-specific behavior.
-```
+Ask:
 
-Also good:
+> Does another document already contain this substantive information?
 
-```ts
-// The runner captures stdout and stderr separately.
-// This lets callers assert stream-specific behavior.
-```
+If yes, link to it.
+Do not restate it merely for convenience.
 
-If the comment remains too long, rewrite it into shorter statements or a list. Do not preserve the same sentence and wrap it mechanically.
+Indexes may contain short role descriptions and reading-order guidance, but must not reproduce the substantive contents of the indexed documents.
 
-## Documentation comments
+### Hand-written content
 
-For documentation comments, split at semantic boundaries.
+Use hand-written prose for knowledge that code and specifications do not preserve well:
 
-Bad:
+- purpose
+- rationale
+- intent
+- goals and non-goals
+- rejected alternatives
+- trade-offs
+- mental models
+- workflows
+- responsibility boundaries
+- maintenance cautions
+- unresolved questions
 
-```ts
-/**
- * Parses the workspace path and rejects absolute paths, empty paths,
- * parent-directory segments, and paths that cannot be normalized safely.
- */
-```
+## Skill maintenance
 
-Better:
+Keep this file as a compact entrypoint and reading guide.
 
-```ts
-/**
- * Parses the workspace path.
- *
- * Rejects absolute paths, empty paths, parent-directory segments, and paths that cannot be normalized safely.
- */
-```
+If this skill would exceed 500 lines:
 
-Better when the rejected cases matter as separate conditions:
-
-```ts
-/**
- * Parses the workspace path.
- *
- * Rejects:
- * - absolute paths
- * - empty paths
- * - parent-directory segments
- * - paths that cannot be normalized safely
- */
-```
-
-## File path link style
-
-When linking to a repository file, prefer a relative Markdown link.
-
-Good:
-
-```md
-See [the design rationale](docs/why-or-why-not.md).
-```
-
-Good when the path itself is the clearest label:
-
-```md
-See [docs/why-or-why-not.md](docs/why-or-why-not.md).
-```
-
-Avoid:
-
-```md
-See `docs/why-or-why-not.md`.
-```
-
-Use inline code for a path only when the path is being discussed as a literal value rather than as a navigational reference.
-
-Examples:
-
-```md
-The default config path is `enozunu.consumer.kdl`.
-```
-
-```md
-The consumer manifest format is described in [the consumer manifest documentation](docs/consumer-manifest.md).
-```
-
-Do not invent links to files that do not exist unless the task is explicitly proposing new files. When proposing new files, make it clear that the link target is proposed or pending.
-
-## Allowed line breaks
-
-A prose line break is allowed when it marks one of these boundaries:
-
-* a new paragraph
-* a heading
-* a list item
-* a table row
-* a code block boundary
-* a sentence boundary in a project that intentionally uses sentence-per-line prose
-* a deliberate separation between distinct comment statements
-* a format-required boundary in generated output or snapshots
-
-## Exceptions
-
-Preserve or introduce hard line breaks only when they are required by the surrounding format or by fidelity to source material.
-
-Valid exceptions include:
-
-* exact quotations where line breaks are meaningful
-* poetry or verse
-* tables
-* code blocks
-* generated snapshots
-* terminal output
-* formatter-controlled source code
-* files whose existing project convention explicitly requires hard-wrapped prose
-
-Apply exceptions narrowly. Do not generalize an exception to nearby prose.
-
-## Repository validation scripts
-
-When the repository provides documentation validation scripts, use them before returning documentation changes as complete.
-
-These scripts are validators, not file discovery tools.
-
-Do not make the scripts responsible for deciding which files to scan. Determine the target files from the task context, changed files, or the repository's check recipe, then pass those file paths to the scripts by arguments or standard input.
-
-For Markdown documentation files, run the repository-provided semantic line break validator when available.
-
-Example:
-
-```sh
-git diff --name-only -- '*.md' '*.markdown' | scripts/docs/check-markdown-semantic-line-breaks.sh
-git ls-files -- '*.md' '*.markdown' | scripts/docs/check-markdown-semantic-line-breaks.sh
-```
-
-For Markdown documentation files, run the repository-provided bare file path validator when available.
-
-Example:
-
-```sh
-git diff --name-only -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -n
-git ls-files -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -n
-```
-
-If the repository uses NUL-delimited file lists, use the validator's NUL-input mode.
-
-Example:
-
-```sh
-git diff --name-only -z -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -0 -n
-git ls-files -z -- '*.md' '*.markdown' | scripts/docs/check-bare-markdown-paths.sh -0 -n
-```
-
-- Use `git diff --name-only` when validating only changed Markdown files.
-- Use `git ls-files` when validating all Git-tracked Markdown files.
-
-If a validator reports a problem, do not treat the documentation change as ready.
-
-Fix the issue when file modification is in scope. If file modification is not in scope, report the validator finding clearly.
-
-If an expected validator is unavailable, cannot be executed, or is not applicable to the changed files, state that explicitly and continue with the manual documentation review defined by this skill.
-
-Passing the validators is necessary but not sufficient. Continue to apply the manual review rules in this skill.
-
-## Review before final output
-
-Before returning code or documentation, check:
-
-* Did I insert a newline inside a sentence only because of width?
-* Did I mechanically wrap Markdown prose?
-* Did I split a single `//` comment sentence across multiple lines?
-* Could a long comment be rewritten into shorter sentences?
-* Would a list express the structure better than a wrapped sentence?
-* Did I leave ordinary code formatting to the formatter?
-* Did I write Markdown prose file references as links when practical?
-* Did I avoid linkifying paths inside code blocks, commands, snapshots, config, and generated output?
-* Did I run the repository-provided documentation validators when applicable?
-* Did I fix or report any semantic line break or bare file path findings reported by those validators?
-
-If any answer indicates mechanical hard-wrapping or a missing navigational file link, revise the prose before returning the result.
+1. move detailed rules, examples, exceptions, and checklists into files under `references/`
+2. keep only the purpose, core principles, default workflow, compact rules, and reference index here
+3. explain exactly when each reference should be read
+4. split by responsibility and task context, not by arbitrary line count
+5. avoid duplicating the same rule between this file and a reference file
+6. make one location authoritative and link to it from the others
