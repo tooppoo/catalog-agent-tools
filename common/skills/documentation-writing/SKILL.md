@@ -29,15 +29,15 @@ It extends ordinary writing rules with source-of-truth, generation, indexing, au
 
 Apply the full skill when creating, reorganizing, or reviewing durable repository documentation, including:
 
-- documentation trees
-- user guides
-- developer guides
-- AI-facing reading guides
-- generated references
-- architecture and design documents
-- ADRs
-- README files that act as documentation entrypoints
-- documentation generation and validation workflows
+* documentation trees
+* user guides
+* developer guides
+* AI-facing reading guides
+* generated references
+* architecture and design documents
+* ADRs
+* README files that act as documentation entrypoints
+* documentation generation and validation workflows
 
 For issue descriptions, PR descriptions, changelogs, and similar prose, apply the relevant prose and link rules.
 Do not impose the full repository documentation architecture unless the task changes durable documentation.
@@ -55,28 +55,38 @@ This skill still governs documentation links and prose structure inside comments
 6. Generate implementation-derived reference material whenever practical.
 7. Write only the human-authored context that cannot be derived mechanically.
 8. Update the relevant user, developer, AI, and root indexes.
-9. Run generators, drift checks, examples, link validation, and repository-provided documentation checks.
+9. Run generators, drift checks, examples, link validation, and the required Markdown validation scripts.
 10. Review the result for duplicated knowledge, unclear authority, orphaned documents, and stale references.
 
 ## Supporting references
 
 Read only the references needed for the current task.
 
-- Read [documentation architecture](references/documentation-architecture.md) when creating, reorganizing, or splitting documentation by audience, or when adding or reviewing index files.
-- Read [source of truth and generation](references/source-of-truth-and-generation.md) when documenting syntax, CLI behavior, configuration, schemas, protocols, diagnostics, artifacts, APIs, or other facts that may be generated from executable specifications or implementation.
-- Read [human-authored documentation](references/human-authored-documentation.md) when writing purpose, rationale, goals, non-goals, workflows, mental models, trade-offs, rejected alternatives, responsibility boundaries, or ADR-like material.
-- Read [cross-document references](references/cross-document-references.md) whenever information is needed in more than one document, when moving or splitting documents, or when reviewing for duplication.
-- Read [prose and links](references/prose-and-links.md) when editing Markdown prose, file references, documentation comments, or line structure.
-- Read [the review checklist](references/review-checklist.md) before declaring a documentation change complete.
+* Read [documentation architecture](references/documentation-architecture.md) when creating, reorganizing, or splitting documentation by audience, or when adding or reviewing index files.
+* Read [source of truth and generation](references/source-of-truth-and-generation.md) when documenting syntax, CLI behavior, configuration, schemas, protocols, diagnostics, artifacts, APIs, or other facts that may be generated from executable specifications or implementation.
+* Read [human-authored documentation](references/human-authored-documentation.md) when writing purpose, rationale, goals, non-goals, workflows, mental models, trade-offs, rejected alternatives, responsibility boundaries, or ADR-like material.
+* Read [cross-document references](references/cross-document-references.md) whenever information is needed in more than one document, when moving or splitting documents, or when reviewing for duplication.
+* Read [prose and links](references/prose-and-links.md) when editing Markdown prose, file references, documentation comments, or line structure.
+* Read [the review checklist](references/review-checklist.md) before declaring a documentation change complete. It defines the required validation commands and completion criteria.
+
+## Required Markdown validation
+
+After editing Markdown documentation, both of these scripts must pass for every edited Markdown file:
+
+* [the semantic line-break validator](scripts/test-semantic-line-break.sh), which detects likely line breaks inserted in the middle of prose
+* [the bare Markdown path validator](scripts/test-bare-markdown-paths.sh), which detects repository paths written as plain text instead of Markdown links
+
+The detailed invocation rules are authoritative in [the review checklist](references/review-checklist.md#required-markdown-validators).
+Do not declare documentation work complete when either script reports a violation.
 
 ## Compact decision rules
 
 ### Audience
 
-- Users need task-oriented guidance, concepts, troubleshooting, and links to exact references.
-- Developers need architecture, invariants, responsibility boundaries, extension points, and change procedures.
-- AI agents need reading order, constraints, and pointers to authoritative documents.
-- ADRs preserve why a decision was made and why alternatives were rejected.
+* Users need task-oriented guidance, concepts, troubleshooting, and links to exact references.
+* Developers need architecture, invariants, responsibility boundaries, extension points, and change procedures.
+* AI agents need reading order, constraints, and pointers to authoritative documents.
+* ADRs preserve why a decision was made and why alternatives were rejected.
 
 ### Generation
 
@@ -102,17 +112,17 @@ Indexes may contain short role descriptions and reading-order guidance, but must
 
 Use hand-written prose for knowledge that code and specifications do not preserve well:
 
-- purpose
-- rationale
-- intent
-- goals and non-goals
-- rejected alternatives
-- trade-offs
-- mental models
-- workflows
-- responsibility boundaries
-- maintenance cautions
-- unresolved questions
+* purpose
+* rationale
+* intent
+* goals and non-goals
+* rejected alternatives
+* trade-offs
+* mental models
+* workflows
+* responsibility boundaries
+* maintenance cautions
+* unresolved questions
 
 ## Skill maintenance
 
