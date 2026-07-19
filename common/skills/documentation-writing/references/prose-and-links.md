@@ -78,6 +78,65 @@ Do not linkify paths inside:
 - literal command or syntax examples
 - formats that do not support Markdown links
 
+## Diagrams
+
+Draw diagrams with mermaid in a fenced ```mermaid block. Do not draw them as ASCII art.
+
+A diagram is content that depicts structure, flow, sequence, hierarchy, or state — anything a reader parses as boxes, arrows, or branches. Prefer mermaid whenever the content is one of these, because a rendered diagram survives reflow, is searchable as text, and can be corrected without redrawing alignment by hand.
+
+Bad:
+
+````md
+```txt
+user
+  |
+  v
+core
+  |
+  v
+backend
+```
+````
+
+Good:
+
+````md
+```mermaid
+flowchart TD
+    user["user"] --> core["core"] --> backend["backend"]
+```
+````
+
+Choose the diagram type that matches the content:
+
+- `flowchart` for structure, control flow, and decision branches
+- `sequenceDiagram` for ordered interaction between components
+- `stateDiagram-v2` for lifecycle and state transitions
+- `erDiagram` for data relationships
+
+### What is not a diagram
+
+Leave these as ordinary fenced blocks. Converting them to mermaid obscures rather than clarifies:
+
+- data structures and field listings
+- example values, payloads, and configuration fragments
+- terminal sessions and command output
+- directory and file path listings
+- ordered prose steps, especially when they carry normative statements such as what must not happen
+
+### Mermaid authoring cautions
+
+- Quote every node and edge label, so punctuation does not break the parser.
+- Avoid `--` inside an edge label. It is parser-hostile even when quoted. Move the affected text into a node, or reword the label.
+- Use `<br>` for line breaks inside a label rather than splitting the node.
+- Keep label text identical in meaning to the prose it accompanies. A diagram is a second rendering of a claim, not a new claim.
+
+### Existing ASCII diagrams
+
+Convert an existing ASCII diagram when you are already editing the document for another reason, or when asked to.
+
+Take more care in a file whose content is meant to be stable, such as an accepted ADR. Converting the drawing is a formatting change and is permitted, but the diagram must preserve the original's meaning exactly. Do not add, drop, reorder, or reinterpret anything while converting.
+
 ## Source comments
 
 Do not split one comment sentence across multiple lines merely because of width.
