@@ -30,6 +30,38 @@ If the change requires multiple independent answers, split it into multiple revi
 
 Stop when the current unit is implemented, tested, and ready for review. Do not begin the next unit without explicit approval.
 
+## Branch and pull-request workflow
+
+Use a working base branch to integrate all review units for one task.
+
+Before implementing the first review unit:
+
+- create the working base branch from the task's original target branch;
+- create the first unit branch from the working base branch.
+
+For each review unit:
+
+- create its unit branch from the current working base branch;
+- implement and validate the unit only on that unit branch;
+- open a pull request from the unit branch into the working base branch;
+- stop for human review;
+- merge the unit branch into the working base branch only after the unit is approved;
+- create the next unit branch from the updated working base branch.
+
+Do not open unit pull requests directly against the task's original target branch.
+
+Do not commit implementation changes directly to the working base branch. The working base branch is an integration branch containing only approved review units.
+
+Do not resolve conflicts or make integration changes directly on the working base branch when they require implementation work or human judgment. Treat such work as an additional review unit, implement it on its own unit branch, and merge it through a pull request.
+
+After all review units are approved and merged:
+
+- run the checks required to validate the integrated result on the working base branch;
+- merge the working base branch into the task's original target branch;
+- do not create a pull request for the working base branch.
+
+Do not bypass branch protection, required reviews, or other repository controls to merge the working base branch. If repository policy does not permit the final merge without a pull request, stop and report the conflict between this workflow and the repository policy.
+
 ## Workflow
 
 ### 1. Inspect the task
@@ -188,5 +220,11 @@ The skill is followed correctly when:
 - deferred work is explicit;
 - the repository is left in a coherent state;
 - the agent stops before implementing the next unit.
+- the current unit is implemented on a unit branch created from the current working base branch;
+- the unit pull request targets the working base branch;
+- the working base branch contains no unreviewed implementation changes;
+- integration changes requiring judgment are handled as separate review units;
+- the working base branch is merged into the original target branch only after all unit pull requests and integrated validation are complete;
+- no pull request is created for the working base branch.
 
 Completing the full Issue is not a completion criterion for a single invocation of this skill.
