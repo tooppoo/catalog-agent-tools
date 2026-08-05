@@ -1,5 +1,10 @@
 # Instructions
 
+## Worktree
+
+- When making file changes, always use the `git-kura` skill unless the user explicitly instructs otherwise.
+- Follow the workflow defined by the `git-kura` skill. Do not duplicate or reinterpret that workflow in this file.
+
 ## Pull Request
 
 - Use `.github/pull_request_template.md` as template.
